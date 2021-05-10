@@ -1,0 +1,1 @@
+regular_tests = tc_index_helper tensor_contraction tc_parser tc_descriptor ttgt_parser
