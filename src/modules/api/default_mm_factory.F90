@@ -26,6 +26,10 @@ module default_mm_factory_module
     use :: magma_mm_driver_module, only : magma_mm_driver
 #endif
 
+#ifdef use_rocblas
+    use :: rocblas_mm_driver_module, only : rocblas_mm_driver
+#endif
+
     implicit none
     private
 
@@ -67,6 +71,10 @@ contains
         case ("magma")
             mm = magma_mm_driver(factory%get_c_pointer_converter("device"))
 #endif
+#ifdef use_rocblas
+        case ("rocblas")
+            mm = rocblas_mm_driver(factory%get_c_pointer_converter("device"))
+#endif
         case default
             error stop "default_mm_factory::create_from_key:Not a valid mm driver: "//key%char_array
         end select
@@ -101,6 +109,11 @@ contains
         counter = counter + 1
         drivers(counter) = "magma"
 #endif
+
+#ifdef use_rocblas
+        counter = counter + 1
+        drivers(counter) = "rocblas"
+#endif
     end function get_available_mm_drivers
 
     integer function count_available_drivers(this)
@@ -123,5 +136,10 @@ contains
 #ifdef use_magma
         count_available_drivers = count_available_drivers + 1
 #endif
+
+#ifdef use_rocblas
+        count_available_drivers = count_available_drivers + 1
+#endif
+
     end function count_available_drivers
 end module default_mm_factory_module

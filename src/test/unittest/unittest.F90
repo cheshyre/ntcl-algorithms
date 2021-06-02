@@ -56,6 +56,16 @@ program unittest
             cuda_update_package_test
 #endif
 
+#ifdef use_rocblas
+    use :: rocblas_package_test_module, only : &
+            rocblas_package_test
+#endif
+
+#ifdef use_hip
+    use :: hip_permute_package_test_module, only : &
+            hip_permute_package_test
+#endif
+
     use :: api_package_test_module, only : &
             api_package_test
 
@@ -110,6 +120,16 @@ program unittest
             acuda_mm_package_test
     type(cuda_update_package_test) :: &
             acuda_update_package_test
+#endif
+
+#ifdef use_rocblas
+    type(rocblas_package_test) :: &
+            arocblas_package_test
+#endif
+
+#ifdef use_hip
+    type(hip_permute_package_test) :: &
+            ahip_permute_package_test
 #endif
 
     type(api_package_test) :: &
@@ -192,6 +212,18 @@ program unittest
     acuda_update_package_test = cuda_update_package_test(aselector)
     call acuda_update_package_test%run(assertion)
     call acuda_update_package_test%cleanup()
+#endif
+
+#ifdef use_rocblas
+    arocblas_package_test = rocblas_package_test(aselector)
+    call arocblas_package_test%run(assertion)
+    call arocblas_package_test%cleanup()
+#endif
+
+#ifdef use_hip
+    ahip_permute_package_test = hip_permute_package_test(aselector)
+    call ahip_permute_package_test%run(assertion)
+    call ahip_permute_package_test%cleanup()
 #endif
 
     aapi_package_test = api_package_test(aselector)

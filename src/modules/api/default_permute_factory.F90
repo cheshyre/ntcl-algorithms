@@ -21,6 +21,12 @@ module default_permute_factory_module
             async_cuda_permute_driver
 #endif
 
+#ifdef use_hip
+    use :: hip_permute_plugin, only : &
+            tensor_permute_hip, &
+            async_hip_permute_driver
+#endif
+
     implicit none
     private
 
@@ -51,6 +57,14 @@ contains
                     factory%get_fortran_pointer_converter("pinned"))
         case ("cuda_async")
             permute = async_cuda_permute_driver()
+#endif
+#ifdef use_hip
+        case ("hip")
+            permute = tensor_permute_hip(&
+                    factory%get_c_pointer_converter("device"), &
+                    factory%get_fortran_pointer_converter("pinned"))
+        case ("hip_async")
+            permute = async_hip_permute_driver()
 #endif
         case default
             error stop "default_permute_factory::create_from_key:Not a valid permute driver: "//key%char_array
@@ -83,6 +97,20 @@ contains
                     get_scratch_buffer("pinned", options, pinned_priorities), &
                     get_scratch_buffer("device", options, device_priorities) )
 #endif
+#ifdef use_hip
+        type is (tensor_permute_hip)
+            continue ! No setup necessary
+        type is (async_hip_permute_driver)
+            pinned_priorities = add_prefix_to_priorities("hip_async-", priorities)
+            device_priorities = add_prefix_to_priorities("device_buffer-", pinned_priorities)
+            pinned_priorities = add_prefix_to_priorities("pinned_buffer-", pinned_priorities)
+
+            call driver%set_builder(get_tensor_builder("device"))
+            call driver%set_converter(factory%get_c_pointer_converter("device"))
+            call driver%set_scratch_buffers( &
+                    get_scratch_buffer("pinned", options, pinned_priorities), &
+                    get_scratch_buffer("device", options, device_priorities) )
+#endif
         class default
             error stop "default_permute_factory::build:Unknown type."
         end select
@@ -105,6 +133,12 @@ contains
         counter = counter + 1
         drivers(counter) = "cuda_async"
 #endif
+#ifdef use_hip
+        counter = counter + 1
+        drivers(counter) = "hip"
+        counter = counter + 1
+        drivers(counter) = "hip_async"
+#endif
     end function get_available_permute_drivers
 
     integer function count_available_drivers(this)
@@ -113,6 +147,9 @@ contains
         count_available_drivers = 1
 
 #ifdef use_cuda
+        count_available_drivers = count_available_drivers + 2
+#endif
+#ifdef use_hip
         count_available_drivers = count_available_drivers + 2
 #endif
     end function count_available_drivers

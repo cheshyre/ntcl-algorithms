@@ -38,6 +38,18 @@ test_modules += cuda_permute cuda_mm cuda_update
 FFLAGS += -Duse_cuda
 endif
 
+ifdef use_rocblas
+modules      += rocblas
+test_modules += rocblas
+FFLAGS += -Duse_rocblas
+endif
+
+ifdef use_hip
+modules      += hip_permute
+test_modules += hip_permute
+FFLAGS += -Duse_hip
+endif
+
 modules      += api
 test_modules += api
 
@@ -56,20 +68,42 @@ endif
 
 ifdef use_magma
 external_include += -I${MAGMA_ROOT}/include ${INCBLAS}
-external_libraries += -L${MAGMA_ROOT}/lib -lmagma -L${CUDA_ROOT}/lib64 -lcublas ${CUDA_LIBS} -lstdc++ ${LIBBLAS}
+external_libraries += -L${MAGMA_ROOT}/lib -lmagma -L${CUDA_ROOT}/lib64 -lcublas -L${CUDA_ROOT}/lib64 -lcudart -lcuda -lstdc++ ${LIBBLAS}
 endif
 
 ifdef use_cublas
-external_libraries += -L${CUDA_ROOT}/lib64 -lcublas ${CUDA_LIBS} -lstdc++
+external_libraries += -L${CUDA_ROOT}/lib64 -lcublas -L${CUDA_ROOT}/lib64 -lcudart -lcuda -lstdc++
 endif
 
 ifdef use_cutensor
 external_include += -I${CUTENSOR_ROOT}/include
-external_libraries += -L${CUTENSOR_ROOT}/lib -lcutensor ${CUDA_LIBS} -lstdc++
+external_libraries += -L${CUTENSOR_ROOT}/lib -lcutensor -L${CUDA_ROOT}/lib64 -lcudart -lcuda -lstdc++
 endif
 
 ifdef use_cuda
-external_libraries += ${CUDA_LIBS} -lstdc++
+external_libraries += -L${CUDA_ROOT}/lib64 -lcudart -lcuda -lstdc++
+endif
+
+ifdef use_rocblas
+ifeq (${HIP_PLATFORM},amd)
+external_include += -I${ROCM_PATH}/rocblas/include
+external_libraries += -L${ROCM_PATH}/rocblas/lib -lrocblas -ldl -L${HIP_PATH}/lib -lamdhip64 -lstdc++
+endif
+
+ifeq (${HIP_PLATFORM},nvidia)
+external_include += -I${ROCM_PATH}/rocblas/include
+external_libraries += -L${ROCM_PATH}/rocblas/lib -lrocblas -ldl -L${CUDA_ROOT}/lib64 -lcudart -lcuda -lstdc++
+endif
+endif
+
+ifdef use_hip
+ifeq (${HIP_PLATFORM},amd)
+external_libraries += -L${HIP_PATH}/lib -lamdhip64 -lstdc++
+endif
+
+ifeq (${HIP_PLATFORM},nvidia)
+external_libraries += -L${CUDA_ROOT}/lib64 -lcudart -lcuda -lstdc++
+endif
 endif
 
 include ${MAKEINC}/standard_defs.mk
