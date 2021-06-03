@@ -48,8 +48,23 @@ contains
                 all(atc_descriptor%a_indices == [1,2,5,6]))
         call assertion%equal("tc_parser::4x4x4::b_indices::", &
                 all(atc_descriptor%b_indices == [5,6,3,4]))
-
         call atc_descriptor%cleanup()
+
+        atc_descriptor = atc_parser%parse(string("T_new(a,b,i,j) : V(a,b,c,d) * T(c,d,i,j)"))
+
+        call assertion%equal("tc_parser::4x4x4::external_indices::", &
+                atc_descriptor%num_external_indices == 4)
+        call assertion%equal("tc_parser::4x4x4::internal_indices::", &
+                atc_descriptor%num_internal_indices == 2)
+
+        call assertion%equal("tc_parser::4x4x4::c_indices::", &
+                all(atc_descriptor%c_indices == [1,2,3,4]))
+        call assertion%equal("tc_parser::4x4x4::a_indices::", &
+                all(atc_descriptor%a_indices == [1,2,5,6]))
+        call assertion%equal("tc_parser::4x4x4::b_indices::", &
+                all(atc_descriptor%b_indices == [5,6,3,4]))
+        call atc_descriptor%cleanup()
+
         atc_descriptor = atc_parser%parse(string("T_new(a,b,i,j) = V(a,b) * T(i,j)"))
         call assertion%equal("tc_parser::4x2x2::external_indices::", &
                 atc_descriptor%num_external_indices == 4)

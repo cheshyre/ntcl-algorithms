@@ -95,7 +95,7 @@ contains
         integer :: idx
         character(len=1) :: ch
 
-        do idx = 1, len(dls)
+        do idx = 1, size(dls)
             ch = dls(idx)
             sides = string_in%split(ch)
             if ( size(sides) == 2 ) exit
