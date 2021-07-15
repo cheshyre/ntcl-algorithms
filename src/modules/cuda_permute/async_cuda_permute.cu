@@ -13,7 +13,7 @@ extern "C" void cuda_tensor_permute_async_real32_execute(float *d_src, float *d_
   // number of elements, so this number must divide evenly
   int TILE_DIM = 32;
   int threadStride = 8;
-  int nBlocks = ((nElems-1) / TILE_DIM*TILE_DIM) + 1;
+  int nBlocks = ((nElems-1) / TILE_DIM/TILE_DIM) + 1;
 
   dim3 blockGrid(nBlocks);
   dim3 threadsPerBlock(TILE_DIM, threadStride, 1);
@@ -33,7 +33,7 @@ extern "C" void cuda_tensor_permute_async_real64_execute(double *d_src, double *
   // number of elements, so this number must divide evenly
   int TILE_DIM = 32;
   int threadStride = 8;
-  int nBlocks = ((nElems-1) / TILE_DIM*TILE_DIM) + 1;
+  int nBlocks = ((nElems-1) / TILE_DIM/TILE_DIM) + 1;
 
   dim3 blockGrid(nBlocks);
   dim3 threadsPerBlock(TILE_DIM, threadStride, 1);
@@ -54,7 +54,7 @@ extern "C" void cuda_tensor_permute_async_complex64_execute(std::complex<float> 
   // number of elements, so this number must divide evenly
   int TILE_DIM = 32;
   int threadStride = 8;
-  int nBlocks = ((nElems-1) / TILE_DIM*TILE_DIM) + 1;
+  int nBlocks = ((nElems-1) / TILE_DIM/TILE_DIM) + 1;
 
   dim3 blockGrid(nBlocks);
   dim3 threadsPerBlock(TILE_DIM, threadStride, 1);
@@ -77,7 +77,7 @@ extern "C" void cuda_tensor_permute_async_complex128_execute(std::complex<double
   // number of elements, so this number must divide evenly
   int TILE_DIM = 32;
   int threadStride = 8;
-  int nBlocks = ((nElems-1) / TILE_DIM*TILE_DIM) + 1;
+  int nBlocks = ((nElems-1) / TILE_DIM/TILE_DIM) + 1;
 
   dim3 blockGrid(nBlocks);
   dim3 threadsPerBlock(TILE_DIM, threadStride, 1);

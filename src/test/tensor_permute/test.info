@@ -1,1 +1,2 @@
 regular_tests = tensor_permute
+long_tests = permute_with_int64_sizes

@@ -24,6 +24,8 @@ module tensor_permute_test_helper_module
     private
 
     public :: test_all
+    public :: permute_real64_tensor_rank4_1_4_3_2
+    public :: permute_real32_tensor_rank4_1_4_3_2
 
 contains
     subroutine test_all(assertion, prefix, driver, memtype, options, priorities)

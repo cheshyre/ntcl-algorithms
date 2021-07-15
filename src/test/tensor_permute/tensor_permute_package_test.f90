@@ -5,6 +5,7 @@ module tensor_permute_package_test_module
             assert
 
     use :: tensor_permute_test_module, only : tensor_permute_test
+    use :: permute_with_int64_sizes_test_module, only : permute_with_int64_sizes_test
 
     implicit none
     private
@@ -38,6 +39,7 @@ contains
         type(assert), intent(inout) :: assertion
 
         type(tensor_permute_test) :: atensor_permute_test
+        type(permute_with_int64_sizes_test) :: apermute_with_int64_sizes_test
 
         call assertion%equal("tensor_permute::Package test complete", .true.)
 
@@ -46,6 +48,15 @@ contains
             atensor_permute_test = tensor_permute_test()
             call atensor_permute_test%run(assertion)
             call atensor_permute_test%cleanup()
+        end if
+
+        ! The following tests will not be run unless long is specified.
+        if ( &
+                this%test_selector%is_enabled("permute_with_int64_sizes") .and. &
+                this%test_selector%is_enabled("long") ) then
+            apermute_with_int64_sizes_test = permute_with_int64_sizes_test()
+            call apermute_with_int64_sizes_test%run(assertion)
+            call apermute_with_int64_sizes_test%cleanup()
         end if
 
     end subroutine run

@@ -18,13 +18,15 @@ module default_permute_factory_module
 #ifdef use_cuda
     use :: cuda_permute_plugin, only : &
             tensor_permute_cuda, &
-            async_cuda_permute_driver
+            async_cuda_permute_driver, &
+            tailored_cuda_permute_driver
 #endif
 
 #ifdef use_hip
     use :: hip_permute_plugin, only : &
             tensor_permute_hip, &
-            async_hip_permute_driver
+            async_hip_permute_driver, &
+            tailored_hip_permute_driver
 #endif
 
     implicit none
@@ -57,6 +59,8 @@ contains
                     factory%get_fortran_pointer_converter("pinned"))
         case ("cuda_async")
             permute = async_cuda_permute_driver()
+        case ("cuda_tailored")
+            permute = tailored_cuda_permute_driver(async_cuda_permute_driver())
 #endif
 #ifdef use_hip
         case ("hip")
@@ -65,6 +69,8 @@ contains
                     factory%get_fortran_pointer_converter("pinned"))
         case ("hip_async")
             permute = async_hip_permute_driver()
+        case ("hip_tailored")
+            permute = tailored_hip_permute_driver(async_hip_permute_driver())
 #endif
         case default
             error stop "default_permute_factory::create_from_key:Not a valid permute driver: "//key%char_array
@@ -96,6 +102,8 @@ contains
             call driver%set_scratch_buffers( &
                     get_scratch_buffer("pinned", options, pinned_priorities), &
                     get_scratch_buffer("device", options, device_priorities) )
+        type is (tailored_cuda_permute_driver)
+            call this%build(driver%driver, options, priorities)
 #endif
 #ifdef use_hip
         type is (tensor_permute_hip)
@@ -110,6 +118,8 @@ contains
             call driver%set_scratch_buffers( &
                     get_scratch_buffer("pinned", options, pinned_priorities), &
                     get_scratch_buffer("device", options, device_priorities) )
+        type is (tailored_hip_permute_driver)
+            call this%build(driver%driver, options, priorities)
 #endif
         class default
             error stop "default_permute_factory::build:Unknown type."
@@ -132,12 +142,16 @@ contains
         drivers(counter) = "cuda"
         counter = counter + 1
         drivers(counter) = "cuda_async"
+        counter = counter + 1
+        drivers(counter) = "cuda_tailored"
 #endif
 #ifdef use_hip
         counter = counter + 1
         drivers(counter) = "hip"
         counter = counter + 1
         drivers(counter) = "hip_async"
+        counter = counter + 1
+        drivers(counter) = "hip_tailored"
 #endif
     end function get_available_permute_drivers
 
@@ -147,10 +161,10 @@ contains
         count_available_drivers = 1
 
 #ifdef use_cuda
-        count_available_drivers = count_available_drivers + 2
+        count_available_drivers = count_available_drivers + 3
 #endif
 #ifdef use_hip
-        count_available_drivers = count_available_drivers + 2
+        count_available_drivers = count_available_drivers + 3
 #endif
     end function count_available_drivers
 end module default_permute_factory_module

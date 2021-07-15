@@ -1,7 +1,7 @@
 module algorithms_initializer
-    use :: data_initializer, only : &
-            data_initialize, &
-            data_finalize
+    use :: tensor_initializer, only : &
+            tensor_initialize, &
+            tensor_finalize
 
     use :: algorithms_dev, only : &
             mm_initialize, &
@@ -32,7 +32,7 @@ module algorithms_initializer
 contains
     subroutine algorithms_initialize()
 
-        call data_initialize()
+        call tensor_initialize()
 
         call mm_initialize(default_mm_factory())
         call tp_initialize(default_permute_factory())
@@ -53,6 +53,6 @@ contains
         call tp_finalize()
         call mm_finalize()
 
-        call data_finalize()
+        call tensor_finalize()
     end subroutine algorithms_finalize
 end module algorithms_initializer

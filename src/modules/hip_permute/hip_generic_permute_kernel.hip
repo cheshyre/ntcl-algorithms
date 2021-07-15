@@ -6,13 +6,14 @@
 
 template <typename T>
 __global__ void hip_tensor_permute_generic_kernel(T *src_tensor, T *dst_tensor, int *src_dims, int *perm, int order, int tileDim, int threadStride){
-  int dst_idx[MAX_ORDER];
-  int src_idx[MAX_ORDER];
-  int src_stride[MAX_ORDER];
-  int dst_stride[MAX_ORDER];
+  // TODO: Uses too much register storage. Move to shared mem and refactor for multiple indices?
+  unsigned int dst_idx[MAX_ORDER];
+  unsigned int src_idx[MAX_ORDER];
+  uint64_t src_stride[MAX_ORDER];
+  uint64_t dst_stride[MAX_ORDER];
 
   // calculate strides
-  int accumulate = 1;
+  uint64_t accumulate = 1;
   for(int i = 0; i < order; i++){
     src_stride[i] = accumulate;
     accumulate *= src_dims[i];
@@ -25,11 +26,11 @@ __global__ void hip_tensor_permute_generic_kernel(T *src_tensor, T *dst_tensor, 
   }
 
   for(int idx = 0; idx < tileDim; idx += threadStride){
-    int src_global_idx = blockIdx.x*(tileDim*tileDim) + threadIdx.y*tileDim + threadIdx.x;
+    uint64_t src_global_idx = blockIdx.x*(tileDim*tileDim) + threadIdx.y*tileDim + threadIdx.x;
     src_global_idx += idx*tileDim;
     // calculate multi-indices
     for(int i = 0; i < order; i++){
-      src_idx[i] = (src_global_idx/src_stride[i])%src_dims[i];
+      src_idx[i] = (unsigned int) (src_global_idx/src_stride[i])%src_dims[i];
     }
 
     for(int i = 0; i < order; i++){
@@ -41,7 +42,7 @@ __global__ void hip_tensor_permute_generic_kernel(T *src_tensor, T *dst_tensor, 
     for(int i = 0; i < order; i ++){
       accumulate += dst_idx[i]*dst_stride[i];
     }
-    int dst_global_idx = accumulate;
+    uint64_t dst_global_idx = accumulate;
 
     if( src_global_idx < src_stride[order-1]*src_dims[order-1] ){
       dst_tensor[ dst_global_idx ] = src_tensor[ src_global_idx ];

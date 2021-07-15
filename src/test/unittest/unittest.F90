@@ -2,7 +2,8 @@
 program unittest
     use :: util_api, only : &
             assert, &
-            selector
+            selector, &
+			string
 
     use :: algorithms_initializer, only : &
             algorithms_initialize, &
@@ -136,7 +137,7 @@ program unittest
             aapi_package_test
 
     assertion = assert()
-    aselector = selector()
+    aselector = selector([string("long")])
 
     call algorithms_initialize()
 

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <complex>
 #include "cuda_generic_permute_kernel.h"
 // Fortran is column major, where the leftmost index is the fastest.
@@ -48,7 +49,6 @@ __global__ void cuda_tensor_permute_generic_kernel(T *src_tensor, T *dst_tensor,
     }
   }
 }
-
 template __global__ void cuda_tensor_permute_generic_kernel<float>(float*, float*, int*, int*, int, int, int);
 template __global__ void cuda_tensor_permute_generic_kernel<double>(double*, double*, int*, int*, int, int, int);
 template __global__ void cuda_tensor_permute_generic_kernel<std::complex<float>>(std::complex<float>*, std::complex<float>*, int*, int*, int, int, int);

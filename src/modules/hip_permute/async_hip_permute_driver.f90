@@ -45,8 +45,8 @@ module async_hip_permute_driver_module
         procedure :: set_scratch_buffers => set_scratch_buffers
         procedure :: permute_tensor => permute_tensor
         procedure :: synchronize => synchronize
-        procedure, private :: release_buffered_data => release_buffered_data
-        procedure, private :: secure_buffered_data => secure_buffered_data
+        procedure :: release_buffered_data => release_buffered_data
+        procedure :: secure_buffered_data => secure_buffered_data
         procedure :: cleanup => cleanup
     end type async_hip_permute_driver
 
