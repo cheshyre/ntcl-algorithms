@@ -1,0 +1,24 @@
+add_library(
+    ntcl_algorithms_matrix_multiplication
+    matrix_multiplication.f90
+    raw_mm_driver.f90
+    pointer_data_mm_driver.f90
+    fortran_data_mm_driver.f90
+    intrinsic_mm_driver.f90
+    mm_factory.f90
+    matrix_multiplication_api.f90
+    matrix_multiplication_dev.f90
+)
+add_library(ntcl_algorithms::matrix_multiplication ALIAS ntcl_algorithms_matrix_multiplication)
+target_include_directories(
+    ntcl_algorithms_matrix_multiplication
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_matrix_multiplication
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+)
