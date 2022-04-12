@@ -1,0 +1,21 @@
+add_library(
+    ntcl_algorithms_tensor_update
+    scalar_inline_update.f90
+    fortran_siu_driver.f90
+    update_factory.f90
+    tensor_update_api.f90
+    tensor_update_dev.f90
+)
+add_library(ntcl_algorithms::tensor_update ALIAS ntcl_algorithms_tensor_update)
+target_include_directories(
+    ntcl_algorithms_tensor_update
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_tensor_update
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+)
