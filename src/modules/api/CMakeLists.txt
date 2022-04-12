@@ -1,0 +1,33 @@
+add_library(
+    ntcl_algorithms_api
+    algorithms_api.f90
+    default_update_factory.F90
+    default_permute_factory.F90
+    default_mm_factory.F90
+    default_contraction_factory.F90
+    default_btp_factory.f90
+    default_btc_factory.f90
+    default_bmm_factory.F90
+    algorithms_dev.f90
+    algorithms_initializer.f90
+)
+add_library(ntcl_algorithms::api ALIAS ntcl_algorithms_api)
+target_include_directories(
+    ntcl_algorithms_api
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_api
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_matrix_multiplication
+    ntcl_algorithms_tensor_permute
+    ntcl_algorithms_tensor_contraction
+    ntcl_algorithms_tensor_update
+    ntcl_algorithms_batched_matrix_multiplication
+    ntcl_algorithms_batched_tensor_permute
+    ntcl_algorithms_batched_tensor_contraction
+)
