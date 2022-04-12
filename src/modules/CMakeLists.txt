@@ -1,3 +1,4 @@
+add_subdirectory(batched_matrix_multiplication)
 add_subdirectory(batched_tensor_permute)
 add_subdirectory(matrix_multiplication)
 add_subdirectory(tensor_contraction)

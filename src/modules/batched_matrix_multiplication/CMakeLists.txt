@@ -1,0 +1,23 @@
+add_library(
+    ntcl_algorithms_batched_matrix_multiplication
+    batched_matrix_multiplication.f90
+    bmm_factory.f90
+    pointer_data_bmm_driver.f90
+    simple_loops_bmm_driver.f90
+    batched_matrix_multiplication_api.f90
+    batched_matrix_multiplication_dev.f90
+)
+add_library(ntcl_algorithms::batched_matrix_multiplication ALIAS ntcl_algorithms_batched_matrix_multiplication)
+target_include_directories(
+    ntcl_algorithms_batched_matrix_multiplication
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_batched_matrix_multiplication
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_matrix_multiplication
+)
