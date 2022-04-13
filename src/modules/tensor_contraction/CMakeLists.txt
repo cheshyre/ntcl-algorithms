@@ -1,0 +1,32 @@
+add_library(
+    ntcl_algorithms_tensor_contraction
+    tensor_contraction.f90
+    contraction_factory.f90
+    tc_descriptor.f90
+    tc_index_helper.f90
+    tc_parser.f90
+    ttgt_descriptor.f90
+    ttgt_parser.f90
+    tc_ttgt.f90
+    unbuffered_ttgt_tc_driver.f90
+    buffered_ttgt_tc_driver.f90
+    tensor_contraction_loops.f90
+    tensor_contraction_api.f90
+    tensor_contraction_dev.f90
+    easy_tensor_contraction_interface.f90
+)
+add_library(ntcl_algorithms::tensor_contraction ALIAS ntcl_algorithms_tensor_contraction)
+target_include_directories(
+    ntcl_algorithms_tensor_contraction
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_tensor_contraction
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_tensor_permute
+    ntcl_algorithms_matrix_multiplication
+)

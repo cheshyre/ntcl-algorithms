@@ -1,0 +1,22 @@
+add_library(
+    ntcl_algorithms_batched_tensor_permute
+    batched_tensor_permute.f90
+    btp_factory.f90
+    simple_loops_btp_driver.f90
+    batched_tensor_permute_api.f90
+    batched_tensor_permute_dev.f90
+)
+add_library(ntcl_algorithms::batched_tensor_permute ALIAS ntcl_algorithms_batched_tensor_permute)
+target_include_directories(
+    ntcl_algorithms_batched_tensor_permute
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_batched_tensor_permute
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_tensor_permute
+)

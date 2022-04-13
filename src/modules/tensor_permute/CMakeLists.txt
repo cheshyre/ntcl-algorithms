@@ -1,0 +1,22 @@
+add_library(
+    ntcl_algorithms_tensor_permute
+    tensor_permute.f90
+    raw_tensor_permute.f90
+    permute_factory.f90
+    tensor_permute_loops.f90
+    tensor_permute_api.f90
+    tensor_permute_dev.f90
+)
+add_library(ntcl_algorithms::tensor_permute ALIAS ntcl_algorithms_tensor_permute)
+target_include_directories(
+    ntcl_algorithms_tensor_permute
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_tensor_permute
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+)

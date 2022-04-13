@@ -1,0 +1,20 @@
+add_library(
+    ntcl_algorithms_tensor_update_test
+    tensor_update_package_test.f90
+    scalar_inline_update_test.f90
+    scalar_inline_update_test_helper.f90
+)
+add_library(ntcl_algorithms::tensor_update_test ALIAS ntcl_algorithms_tensor_update_test)
+target_include_directories(
+    ntcl_algorithms_tensor_update_test
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_tensor_update_test
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_api
+)

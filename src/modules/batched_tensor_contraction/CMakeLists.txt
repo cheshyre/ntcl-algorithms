@@ -1,0 +1,22 @@
+add_library(
+    ntcl_algorithms_batched_tensor_contraction
+    batched_tensor_contraction.f90
+    btc_factory.f90
+    simple_loops_btc_driver.f90
+    batched_tensor_contraction_api.f90
+    batched_tensor_contraction_dev.f90
+)
+add_library(ntcl_algorithms::batched_tensor_contraction ALIAS ntcl_algorithms_batched_tensor_contraction)
+target_include_directories(
+    ntcl_algorithms_batched_tensor_contraction
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_batched_tensor_contraction
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_tensor_contraction
+)

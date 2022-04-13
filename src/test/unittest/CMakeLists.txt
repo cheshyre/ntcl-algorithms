@@ -1,0 +1,18 @@
+add_executable(
+    ntcl_algorithms_unittest
+    unittest.F90
+)
+target_link_libraries(
+    ntcl_algorithms_unittest
+    PUBLIC
+    ntcl_util::api
+    ntcl_algorithms_api
+    ntcl_algorithms_matrix_multiplication_test
+    ntcl_algorithms_tensor_permute_test
+    ntcl_algorithms_tensor_contraction_test
+    ntcl_algorithms_tensor_update_test
+    ntcl_algorithms_batched_matrix_multiplication_test
+    ntcl_algorithms_batched_tensor_permute_test
+    ntcl_algorithms_batched_tensor_contraction_test
+    ntcl_algorithms_api_test
+)
