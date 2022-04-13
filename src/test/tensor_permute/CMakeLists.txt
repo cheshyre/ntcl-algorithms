@@ -1,0 +1,21 @@
+add_library(
+    ntcl_algorithms_tensor_permute_test
+    tensor_permute_package_test.f90
+    tensor_permute_test.f90
+    tensor_permute_test_helper.f90
+    permute_with_int64_sizes_test.f90
+)
+add_library(ntcl_algorithms::tensor_permute_test ALIAS ntcl_algorithms_tensor_permute_test)
+target_include_directories(
+    ntcl_algorithms_tensor_permute_test
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_tensor_permute_test
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_api
+)

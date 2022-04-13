@@ -1,0 +1,20 @@
+add_library(
+    ntcl_algorithms_batched_matrix_multiplication_test
+    batched_matrix_multiplication_package_test.f90
+    batched_matrix_multiplication_test.f90
+    batched_matrix_multiplication_test_helper.f90
+)
+add_library(ntcl_algorithms::batched_matrix_multiplication_test ALIAS ntcl_algorithms_batched_matrix_multiplication_test)
+target_include_directories(
+    ntcl_algorithms_batched_matrix_multiplication_test
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_batched_matrix_multiplication_test
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_api
+)

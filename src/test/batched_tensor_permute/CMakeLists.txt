@@ -1,0 +1,20 @@
+add_library(
+    ntcl_algorithms_batched_tensor_permute_test
+    batched_tensor_permute_package_test.f90
+    batched_tensor_permute_test.f90
+    batched_tensor_permute_test_helper.f90
+)
+add_library(ntcl_algorithms::batched_tensor_permute_test ALIAS ntcl_algorithms_batched_tensor_permute_test)
+target_include_directories(
+    ntcl_algorithms_batched_tensor_permute_test
+    PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+target_link_libraries(
+    ntcl_algorithms_batched_tensor_permute_test
+    PUBLIC
+    ntcl_util::api
+    ntcl_data::api
+    ntcl_tensor::api
+    ntcl_algorithms_api
+)
